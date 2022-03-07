@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+README.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Homework Assignment 4</span>
+
+<span class="s1">**</span><span class="s2">Overview</span><span class="s1">**</span><span class="s2">. </span>
+<span class="s2">Atrial fibrillation is a major public health problem, as it is the cause of 10-15% of all stokes. </span>
+<span class="s2">It is an irregularity of the heart rhythm that can lead to the formation of small blood clots </span><span class="s1">(</span><span class="s2">emboli</span><span class="s1">) </span>
+<span class="s2">in the circulation. If these clots reach the brain, then a stroke occurs. Several trials have </span>
+<span class="s2">demonstrated that anticoagulation dramatically reduces this risk of stroke. </span>
+<span class="s2">The dilemma is that it also increases the risk of bleeding, </span>
+<span class="s2">the most serious form of which is a bleed into the brain </span><span class="s1">(</span><span class="s2">i.e., a hemorrhagic stroke</span><span class="s1">)</span><span class="s2">. </span>
+<span class="s2">Thus, the decision problem is whether the reduced risk of embolic </span>
+<span class="s2">stroke from using anticoagulation is worth the increase risk of bleeding. </span>
+<span class="s2">Clearly, this depends on the risk of emboli – the higher the risk, the greater </span>
+<span class="s2">the payoff from anticoagulation. Note that a stroke or bleed can occur </span>
+<span class="s2">repeatedly during the lifetime of the patient, so we must model the entire uncertain </span>
+<span class="s2">life span of the patient, and allow for repeated uncertain events. </span>
+
+<span class="s1">**</span><span class="s2">Problem 1</span><span class="s1">: </span><span class="s2">Markov Model </span><span class="s1">(</span><span class="s2">Weight 1</span><span class="s1">)**</span><span class="s2">.</span>
+<span class="s2">We would like to formulate this problem as a Markov model with the following mutually-exclusive states</span><span class="s1">:</span>
+<span class="s0">1. </span><span class="s1">**</span><span class="s2">Well</span><span class="s1">**: </span><span class="s2">Representing patients who are asymptomatic but in whom atrial fibrillation continues. </span>
+<span class="s2">We assume they have a normal quality of life in spite of the increased risk of stoke.</span>
+<span class="s0">2. </span><span class="s1">**</span><span class="s2">Post-Stroke</span><span class="s1">**: </span><span class="s2">Representing patients who have survived a stroke. They have a reduced quality of life</span>
+<span class="s2">and an increase probability of further stroke </span><span class="s1">(</span><span class="s2">and hence require treatment with anticoagulation</span><span class="s1">)</span><span class="s2">.</span>
+<span class="s0">3. </span><span class="s1">**</span><span class="s2">Dead</span><span class="s1">**: </span><span class="s2">An absorbing state to represent patients who died due to stroke. </span>
+
+<span class="s2">Draw a Markov diagram </span><span class="s1">(</span><span class="s2">using any program you wish</span><span class="s1">) </span><span class="s2">with the three health states described above and </span>
+<span class="s2">directed arrows that represent the possibility of transition between states. Name your diagram as </span><span class="s1">'</span><span class="s2">MarkovModel' </span>
+<span class="s2">and make sure to push it with your submission. </span>
+
+
+<span class="s1">**</span><span class="s2">Problem 2</span><span class="s1">: </span><span class="s2">Probability Transition Matrix </span><span class="s1">(</span><span class="s2">Weight 2</span><span class="s1">)**</span><span class="s2">.</span>
+<span class="s2">In many situations, the probability transition matrix is not readily available and we need to calculate</span>
+<span class="s2">it using estimates available to us. Use the following estimates to calculate the </span>
+<span class="s2">transition probability matrix of the Markov model you drew for Problem 1</span><span class="s1">:</span>
+
+<span class="s0">1. </span><span class="s2">For patients in health state </span><span class="s1">'</span><span class="s2">Well', the annual probability of stroke is 5%. </span>
+<span class="s0">2. </span><span class="s2">For patients in health state </span><span class="s1">'</span><span class="s2">Post-Stroke', the annual probability of stroke is 20%. </span>
+<span class="s0">3. </span><span class="s2">If a patient experiences a stroke, they will survive with 70% probability </span><span class="s1">(</span><span class="s2">and move to </span><span class="s1">'</span><span class="s2">Post-Stoke'</span><span class="s1">)</span><span class="s2">. </span>
+
+<span class="s1">_</span><span class="s2">Hint</span><span class="s1">_: </span><span class="s2">To calculate transition probabilities out of </span><span class="s1">'</span><span class="s2">Well', imagine you start today with 100 patients in </span><span class="s1">'</span><span class="s2">Well', </span>
+<span class="s2">by the end of the year, how many would you expect to be still in </span><span class="s1">'</span><span class="s2">Well', </span>
+<span class="s2">how many in </span><span class="s1">'</span><span class="s2">Post-Stroke'm and how many in </span><span class="s1">'</span><span class="s2">Dead'? </span>
+<span class="s2">Try to answer the same questions when you start today with 100 patients in </span><span class="s1">'</span><span class="s2">Post-Stroke' and </span><span class="s1">'</span><span class="s2">Dead'. </span>
+<span class="s2">And remember the sum of probabilities in each row should be 1.</span>
+
+
+<span class="s1">**</span><span class="s2">Problem 3</span><span class="s1">: </span><span class="s2">Simulation </span><span class="s1">(</span><span class="s2">Weight 4</span><span class="s1">)**</span><span class="s2">. </span>
+<span class="s2">Develop a model to simulate 2,000 patients over 50 years to estimate the expected life-years of </span>
+<span class="s2">a patient who is in state “Well” at the beginning of the simulation period. </span>
+
+<span class="s1">**</span><span class="s2">Problem 4</span><span class="s1">: </span><span class="s2">Survival Curves and Histogram of Survival Times </span><span class="s1">(</span><span class="s2">Weight 2</span><span class="s1">)**: </span>
+<span class="s2">Produce the survival curve of patients who start in state “Well” and the histogram of patient survival times.</span>
+
+<span class="s1">**</span><span class="s2">Problem 5</span><span class="s1">: </span><span class="s2">Temporary State </span><span class="s1">(</span><span class="s2">Weight 1</span><span class="s1">)**</span><span class="s2">. </span>
+<span class="s2">Can you think of a way to count the number of strokes that a patient experiences throughout their lifetime</span>
+<span class="s2">in this Markov model? With only 3 states, the number of strokes cannot be properly counted. </span>
+<span class="s2">Note that in this model, a patient who is in “Post-Stroke” state could continue to stay in </span>
+<span class="s2">this state under two scenarios</span><span class="s1">: </span>
+<span class="s0">1. </span><span class="s2">If a patient experience a stroke but survives, or</span>
+<span class="s0">2. </span><span class="s2">If a patient does not experience a stroke and keeps her post-stroke status. </span>
+
+<span class="s2">Under scenario 1, we should increment the number of strokes by 1 but with only 3 states, </span>
+<span class="s2">we cannot tell if scenario 1 has occurs during a time-step. </span>
+
+<span class="s2">One popular approach to resolve this problem is to add a </span><span class="s1">**</span><span class="s2">temporary state</span><span class="s1">** </span><span class="s2">“Stroke” to model </span>
+<span class="s2">the actual event </span><span class="s1">(</span><span class="s2">here stoke</span><span class="s1">) </span><span class="s2">that causes transition from one state to another state.</span>
+<span class="s2">This temporary state is characterized by having transitions from it only to other </span>
+<span class="s2">states and not to itself. Therefore, a patient can stay in this state for one </span>
+<span class="s2">cycle only and must move to another state for the next cycle. </span>
+<span class="s2">The presence of temporary “Stroke” enables the calculation of stroke episodes. </span>
+<span class="s2">Update your Markov model diagram and the probability transition matrix </span>
+<span class="s2">to reflect the addition of the temporary state “Stroke”. Note that now</span><span class="s1">:</span>
+ 
+<span class="s0">1.  </span><span class="s2">We don’t have transition from “Well” to “Post-Stroke” and instead a patient who experiences </span>
+<span class="s2">stroke while in state “Well” will move to the temporary state “Stroke”. </span>
+<span class="s0">2.  </span><span class="s2">From state “Stroke” one can move to “Post-Stroke” state with 70% probability or move to </span><span class="s1">&quot;</span><span class="s2">Death</span><span class="s1">&quot; </span><span class="s2">with 30% probability. </span>
+<span class="s0">3.  </span><span class="s2">And the movements out of the state “Post-Stroke” is now more accurately modeled. </span>
+<span class="s2">A patient in this state may experience another stroke with 20% probability </span>
+<span class="s2">or may experience an “event-free” cycle and stays in “Post-Stroke” state with 80% probability.</span>
+
+<span class="s1">**</span><span class="s2">Problem 6</span><span class="s1">: </span><span class="s2">Simulation </span><span class="s1">(</span><span class="s2">Weight 4</span><span class="s1">)**</span><span class="s2">. </span>
+<span class="s2">Develop a new Markov model to simulate 2,000 patients over 50 years to estimate the expected life-years </span>
+<span class="s2">and the number of stokes for patients who start in state “Well” at the beginning of the simulation period. </span>
+<span class="s2">Display the survival curve, and histograms of number of strokes and survival life-years.  </span>
+
+
+<span class="s1">**</span><span class="s2">Problem 7</span><span class="s1">: </span><span class="s2">A More Accurate Way of Modeling Strokes </span><span class="s1">(</span><span class="s2">BONUS PROBLEM, Weight 4</span><span class="s1">)**</span><span class="s2">. </span>
+<span class="s2">Compare the estimated mean survival time from the first Markov model with the second Markov model that utilizes </span>
+<span class="s2">a temporary state. </span>
+<span class="s2">You will notice that adding the temporary state has artificially increased the patient survival time. </span>
+<span class="s2">This is because those who move to the temporary state </span><span class="s1">(</span><span class="s2">here due to experiencing a stroke</span><span class="s1">) </span><span class="s2">are assumed</span>
+<span class="s2">to stay there for exactly 1 cycle </span><span class="s1">(</span><span class="s2">here 1 year</span><span class="s1">)</span><span class="s2">. This is clearly an unrealistic assumption. </span>
+<span class="s2">A more accurate way to simulate this Markov model is to model the events that derives </span>
+<span class="s2">the transition between states. </span>
+<span class="s2">To this end, the </span><span class="s3">`</span><span class="s2">simulate</span><span class="s1">()</span><span class="s3">` </span><span class="s2">method of the </span><span class="s3">`</span><span class="s2">Patient</span><span class="s3">` </span><span class="s2">class should be implemented diffrently</span><span class="s1">:</span>
+
+    <span class="s3">While the patient is alive and simulation length is not yet reached:</span>
+        <span class="s3">If health state is Well or Post-Stroke:</span>
+            <span class="s3">Decide if the patient will have stroke:</span>
+            <span class="s3">If yes,</span>
+                <span class="s3">Incriment the number of strokes </span>
+                <span class="s3">Decide if the patient will survive:</span>
+                <span class="s3">If yes, </span>
+                    <span class="s3">Set current state &lt;-- Post-Stroke</span>
+                <span class="s3">Else if the patient dies</span>
+                    <span class="s3">Set current state &lt;-- Dead</span>
+            <span class="s3">Else if no stroke </span>
+                <span class="s3">Set current state &lt;-- current state</span>
+        
+        <span class="s3">Else if health state is Dead:        </span>
+            <span class="s3">Set current state &lt;-- Dead</span>
+ 
+<span class="s2">Evaluate this new simulation model to estimate the mean survival time of patients</span>
+<span class="s2">and produce the survival curve, and histograms of number of strokes and survival life-years.  </span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>RunSim5.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+RunSim5.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">Problem5Inputs </span><span class="s0">as </span><span class="s1">Data</span>
+<span class="s0">import </span><span class="s1">SimPy.Plots.Histogram </span><span class="s0">as </span><span class="s1">Hist</span>
+<span class="s0">import </span><span class="s1">SimPy.Plots.SamplePaths </span><span class="s0">as </span><span class="s1">Path</span>
+<span class="s0">from </span><span class="s1">Simulate5 </span><span class="s0">import </span><span class="s1">Cohort</span>
+
+<span class="s2"># create a cohort</span>
+<span class="s1">myCohort = Cohort(id=</span><span class="s3">1</span><span class="s0">,</span>
+                  <span class="s1">pop_size=Data.POP_SIZE</span><span class="s0">,</span>
+                  <span class="s1">transition_prob_matrix=Data.get_trans_prob_matrix(Data.TRANS_MATRIX))</span>
+
+<span class="s2"># simulate the cohort over the specified time steps</span>
+<span class="s1">myCohort.simulate(n_time_steps=Data.SIM_TIME_STEPS)</span>
+
+<span class="s2"># plot the sample path (survival curve)</span>
+<span class="s1">Path.plot_sample_path(</span>
+    <span class="s1">sample_path=myCohort.cohortOutcomes.nLivingPatients</span><span class="s0">,</span>
+    <span class="s1">title=</span><span class="s4">'Survival Curve'</span><span class="s0">,</span>
+    <span class="s1">x_label=</span><span class="s4">'Time-Step (Year)'</span><span class="s0">,</span>
+    <span class="s1">y_label=</span><span class="s4">'Number Survived'</span><span class="s1">)</span>
+
+<span class="s2"># plot the histogram of survival times</span>
+<span class="s1">Hist.plot_histogram(</span>
+    <span class="s1">data=myCohort.cohortOutcomes.survivalTimes</span><span class="s0">,</span>
+    <span class="s1">title=</span><span class="s4">'Histogram of Patient Survival Time'</span><span class="s0">,</span>
+    <span class="s1">x_label=</span><span class="s4">'Survival Time (Year)'</span><span class="s0">,</span>
+    <span class="s1">y_label=</span><span class="s4">'Count'</span><span class="s0">,</span>
+    <span class="s1">bin_width=</span><span class="s3">1</span><span class="s1">)</span>
+
+<span class="s2"># plot the histogram of survival times</span>
+<span class="s1">Hist.plot_histogram(</span>
+    <span class="s1">data=myCohort.cohortOutcomes.totalNumberOfStrokes</span><span class="s0">,</span>
+    <span class="s1">title=</span><span class="s4">'Histogram of Number of Strokes'</span><span class="s0">,</span>
+    <span class="s1">x_label=</span><span class="s4">'Number of Strokes'</span><span class="s0">,</span>
+    <span class="s1">y_label=</span><span class="s4">'Count'</span><span class="s0">,</span>
+    <span class="s1">bin_width=</span><span class="s3">1</span><span class="s1">)</span>
+
+<span class="s2"># print the patient survival time</span>
+<span class="s1">print(</span><span class="s4">'Mean survival time (years):'</span><span class="s0">,</span>
+      <span class="s1">myCohort.cohortOutcomes.meanSurvivalTime)</span>
+<span class="s2"># print mean time to AIDS</span>
+<span class="s1">print(</span><span class="s4">'Mean time until Post Stroke (years)'</span><span class="s0">,</span>
+      <span class="s1">myCohort.cohortOutcomes.meanTimeToPostStroke)</span>
+<span class="s2"># print the number of strokes</span>
+<span class="s1">print(</span><span class="s4">'Number of strokes:'</span><span class="s0">,</span>
+      <span class="s1">myCohort.cohortOutcomes.totalStrokes)</span></pre>
+</body>
+</html>

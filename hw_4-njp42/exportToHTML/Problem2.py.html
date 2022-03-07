@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Problem2.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #629755; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Problem2.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">enum </span><span class="s0">import </span><span class="s1">Enum</span>
+<span class="s0">import </span><span class="s1">numpy </span><span class="s0">as </span><span class="s1">np</span>
+
+<span class="s2"># simulation settings</span>
+<span class="s1">POP_SIZE = </span><span class="s3">2000         </span><span class="s2"># cohort population size</span>
+<span class="s1">SIM_TIME_STEPS = </span><span class="s3">50    </span><span class="s2"># length of simulation (years)</span>
+
+
+<span class="s0">class </span><span class="s1">HealthStates(Enum):   </span><span class="s2"># can assign numbers to states/text to make code more readable.</span>
+    <span class="s4">&quot;&quot;&quot; health states of patients with HIV &quot;&quot;&quot;</span>
+    <span class="s1">WELL = </span><span class="s3">0</span>
+    <span class="s1">POST_STROKE = </span><span class="s3">1</span>
+    <span class="s1">DEATH = </span><span class="s3">2</span>
+
+
+<span class="s2"># transition matrix</span>
+<span class="s1">TRANS_MATRIX = [</span>
+    <span class="s1">[</span><span class="s3">95</span><span class="s0">,  </span><span class="s3">3.5</span><span class="s0">,    </span><span class="s3">1.5</span><span class="s1">]</span><span class="s0">,   </span><span class="s2"># WELL</span>
+    <span class="s1">[</span><span class="s3">0</span><span class="s0">,     </span><span class="s3">94</span><span class="s0">,     </span><span class="s3">6</span><span class="s1">]</span><span class="s0">,   </span><span class="s2"># POST_STROKE</span>
+    <span class="s1">[</span><span class="s3">0</span><span class="s0">,     </span><span class="s3">0</span><span class="s0">,    </span><span class="s3">100</span><span class="s1">]    </span><span class="s2"># DEAD</span>
+    <span class="s1">]</span>
+
+
+<span class="s0">def </span><span class="s1">get_trans_prob_matrix(trans_matrix):</span>
+    <span class="s4">&quot;&quot;&quot; 
+    :param trans_matrix: transition matrix containing counts of transitions between states 
+    :return: transition probability matrix 
+    &quot;&quot;&quot;</span>
+
+    <span class="s2"># initialize transition probability matrix</span>
+    <span class="s1">trans_prob_matrix = []</span>
+
+    <span class="s2"># for each row in the transition matrix</span>
+    <span class="s0">for </span><span class="s1">row </span><span class="s0">in </span><span class="s1">trans_matrix:</span>
+        <span class="s2"># calculate the transition probabilities</span>
+        <span class="s1">prob_row = np.array(row)/sum(row)</span>
+        <span class="s2"># add this row of transition probabilities to the transition probability matrix</span>
+        <span class="s1">trans_prob_matrix.append(prob_row)</span>
+
+    <span class="s0">return </span><span class="s1">trans_prob_matrix</span>
+
+<span class="s1">print(get_trans_prob_matrix(TRANS_MATRIX))</span></pre>
+</body>
+</html>

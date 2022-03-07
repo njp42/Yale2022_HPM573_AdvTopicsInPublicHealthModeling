@@ -1,0 +1,168 @@
+<html>
+<head>
+<title>Prob3_SimulationClasses.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+.s5 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Prob3_SimulationClasses.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">numpy </span><span class="s0">as </span><span class="s1">np</span>
+
+<span class="s0">import </span><span class="s1">SimPy.Markov </span><span class="s0">as </span><span class="s1">Markov</span>
+<span class="s0">import </span><span class="s1">SimPy.Plots.SamplePaths </span><span class="s0">as </span><span class="s1">Path</span>
+<span class="s0">from </span><span class="s1">Problem2 </span><span class="s0">import </span><span class="s1">HealthStates</span>
+
+
+<span class="s0">class </span><span class="s1">Patient:</span>
+    <span class="s0">def </span><span class="s1">__init__(self</span><span class="s0">, </span><span class="s1">id</span><span class="s0">, </span><span class="s1">transition_prob_matrix):</span>
+        <span class="s2">&quot;&quot;&quot; initiates a patient 
+        :param id: ID of the patient 
+        :param transition_prob_matrix: transition probability matrix 
+        &quot;&quot;&quot;</span>
+        <span class="s1">self.id = id</span>
+        <span class="s1">self.transProbMatrix = transition_prob_matrix</span>
+        <span class="s1">self.stateMonitor = PatientStateMonitor()</span>
+
+    <span class="s0">def </span><span class="s1">simulate(self</span><span class="s0">, </span><span class="s1">n_time_steps):</span>
+        <span class="s2">&quot;&quot;&quot; simulate the patient over the specified simulation length &quot;&quot;&quot;</span>
+
+        <span class="s3"># random number generator</span>
+        <span class="s1">rng = np.random.RandomState(seed=self.id)</span>
+        <span class="s3"># jump process</span>
+        <span class="s1">markov_jump = Markov.MarkovJumpProcess(transition_prob_matrix=self.transProbMatrix)</span>
+
+        <span class="s1">k = </span><span class="s4">0  </span><span class="s3"># simulation time step</span>
+
+        <span class="s3"># while the patient is alive and simulation length is not yet reached</span>
+        <span class="s0">while </span><span class="s1">self.stateMonitor.get_if_alive() </span><span class="s0">and </span><span class="s1">k &lt; n_time_steps:</span>
+
+            <span class="s3"># sample from the Markov jump process to get a new state</span>
+            <span class="s3"># (returns an integer from {0, 1, 2, ...})</span>
+            <span class="s1">new_state_index = markov_jump.get_next_state(</span>
+                <span class="s1">current_state_index=self.stateMonitor.currentState.value</span><span class="s0">,</span>
+                <span class="s1">rng=rng)</span>
+
+            <span class="s3"># update health state</span>
+            <span class="s1">self.stateMonitor.update(time_step=k</span><span class="s0">, </span><span class="s1">new_state=HealthStates(new_state_index))</span>
+
+            <span class="s3"># increment time</span>
+            <span class="s1">k += </span><span class="s4">1</span>
+
+
+<span class="s0">class </span><span class="s1">PatientStateMonitor:</span>
+    <span class="s2">&quot;&quot;&quot; to update patient outcomes (years survived, cost, etc.) throughout the simulation &quot;&quot;&quot;</span>
+    <span class="s0">def </span><span class="s1">__init__(self):</span>
+
+        <span class="s1">self.currentState = HealthStates.WELL    </span><span class="s3"># current health state</span>
+        <span class="s1">self.survivalTime = </span><span class="s0">None      </span><span class="s3"># survival time</span>
+        <span class="s1">self.timeToPostStroke = </span><span class="s0">None        </span><span class="s3"># time to develop Stroke</span>
+
+    <span class="s0">def </span><span class="s1">update(self</span><span class="s0">, </span><span class="s1">time_step</span><span class="s0">, </span><span class="s1">new_state):</span>
+        <span class="s2">&quot;&quot;&quot; 
+        update the current health state to the new health state 
+        :param time_step: current time step 
+        :param new_state: new state 
+        &quot;&quot;&quot;</span>
+
+        <span class="s3"># update survival time</span>
+        <span class="s0">if </span><span class="s1">new_state == HealthStates.DEATH:</span>
+            <span class="s1">self.survivalTime = time_step + </span><span class="s4">0.5  </span><span class="s3"># corrected for the half-cycle effect</span>
+
+        <span class="s3"># update time until Post Stroke</span>
+        <span class="s0">if </span><span class="s1">self.currentState != HealthStates.POST_STROKE </span><span class="s0">and </span><span class="s1">new_state == HealthStates.POST_STROKE:</span>
+            <span class="s1">self.timeToPostStroke = time_step + </span><span class="s4">0.5  </span><span class="s3"># corrected for the half-cycle effect</span>
+
+        <span class="s3"># update current health state</span>
+        <span class="s1">self.currentState = new_state</span>
+
+    <span class="s0">def </span><span class="s1">get_if_alive(self):</span>
+        <span class="s2">&quot;&quot;&quot; returns true if the patient is still alive &quot;&quot;&quot;</span>
+        <span class="s0">if </span><span class="s1">self.currentState != HealthStates.DEATH:</span>
+            <span class="s0">return True</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s0">return False</span>
+
+
+<span class="s0">class </span><span class="s1">Cohort:</span>
+    <span class="s0">def </span><span class="s1">__init__(self</span><span class="s0">, </span><span class="s1">id</span><span class="s0">, </span><span class="s1">pop_size</span><span class="s0">, </span><span class="s1">transition_prob_matrix):</span>
+        <span class="s2">&quot;&quot;&quot; create a cohort of patients 
+        :param id: cohort ID 
+        :param pop_size: population size of this cohort 
+        :param transition_prob_matrix: transition probability matrix 
+        &quot;&quot;&quot;</span>
+        <span class="s1">self.id = id</span>
+        <span class="s1">self.popSize = pop_size</span>
+        <span class="s1">self.transitionProbMatrix = transition_prob_matrix</span>
+        <span class="s1">self.cohortOutcomes = CohortOutcomes()  </span><span class="s3"># outcomes of the this simulated cohort</span>
+
+    <span class="s0">def </span><span class="s1">simulate(self</span><span class="s0">, </span><span class="s1">n_time_steps):</span>
+        <span class="s2">&quot;&quot;&quot; simulate the cohort of patients over the specified number of time-steps 
+        :param n_time_steps: number of time steps to simulate the cohort 
+        &quot;&quot;&quot;</span>
+
+        <span class="s3"># populate the cohort</span>
+        <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range(self.popSize):</span>
+            <span class="s3"># create a new patient (use id * pop_size + n as patient id)</span>
+            <span class="s1">patient = Patient(id=self.id * self.popSize + i</span><span class="s0">,</span>
+                              <span class="s1">transition_prob_matrix=self.transitionProbMatrix)</span>
+            <span class="s3"># simulate</span>
+            <span class="s1">patient.simulate(n_time_steps)</span>
+
+            <span class="s3"># store outputs of this simulation</span>
+            <span class="s1">self.cohortOutcomes.extract_outcome(simulated_patient=patient)</span>
+
+        <span class="s3"># calculate cohort outcomes</span>
+        <span class="s1">self.cohortOutcomes.calculate_cohort_outcomes(initial_pop_size=self.popSize)</span>
+
+
+<span class="s0">class </span><span class="s1">CohortOutcomes:</span>
+    <span class="s0">def </span><span class="s1">__init__(self):</span>
+
+        <span class="s1">self.survivalTimes = []  </span><span class="s3"># patients' survival times</span>
+        <span class="s1">self.timesToPostStroke = []  </span><span class="s3"># patients' times to Post Stroke</span>
+        <span class="s1">self.meanSurvivalTime = </span><span class="s0">None  </span><span class="s3"># mean survival times</span>
+        <span class="s1">self.meanTimeToPostStroke = </span><span class="s0">None  </span><span class="s3"># mean time to Post Stroke</span>
+        <span class="s1">self.nLivingPatients = </span><span class="s0">None  </span><span class="s3"># survival curve (sample path of number of alive patients over time)</span>
+
+    <span class="s0">def </span><span class="s1">extract_outcome(self</span><span class="s0">, </span><span class="s1">simulated_patient):</span>
+        <span class="s2">&quot;&quot;&quot; extracts outcomes of a simulated patient 
+        :param simulated_patient: a simulated patient&quot;&quot;&quot;</span>
+
+        <span class="s3"># record survival time and time until Post Stroke</span>
+        <span class="s0">if </span><span class="s1">simulated_patient.stateMonitor.survivalTime </span><span class="s0">is not None</span><span class="s1">:</span>
+            <span class="s1">self.survivalTimes.append(simulated_patient.stateMonitor.survivalTime)</span>
+        <span class="s0">if </span><span class="s1">simulated_patient.stateMonitor.timeToPostStroke </span><span class="s0">is not None</span><span class="s1">:</span>
+            <span class="s1">self.timesToPostStroke.append(simulated_patient.stateMonitor.timeToPostStroke)</span>
+
+    <span class="s0">def </span><span class="s1">calculate_cohort_outcomes(self</span><span class="s0">, </span><span class="s1">initial_pop_size):</span>
+        <span class="s2">&quot;&quot;&quot; calculates the cohort outcomes 
+        :param initial_pop_size: initial population size 
+        &quot;&quot;&quot;</span>
+
+        <span class="s3"># calculate mean survival time</span>
+        <span class="s1">self.meanSurvivalTime = sum(self.survivalTimes) / len(self.survivalTimes)</span>
+        <span class="s3"># calculate mean time to AIDS</span>
+        <span class="s1">self.meanTimeToPostStroke = sum(self.timesToPostStroke) / len(self.timesToPostStroke)</span>
+
+        <span class="s3"># survival curve</span>
+        <span class="s1">self.nLivingPatients = Path.PrevalencePathBatchUpdate(</span>
+            <span class="s1">name=</span><span class="s5">'# of living patients'</span><span class="s0">,</span>
+            <span class="s1">initial_size=initial_pop_size</span><span class="s0">,</span>
+            <span class="s1">times_of_changes=self.survivalTimes</span><span class="s0">,</span>
+            <span class="s1">increments=[-</span><span class="s4">1</span><span class="s1">] * len(self.survivalTimes)</span>
+        <span class="s1">)</span>
+
+</pre>
+</body>
+</html>
